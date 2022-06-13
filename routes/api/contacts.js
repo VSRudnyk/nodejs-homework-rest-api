@@ -1,12 +1,17 @@
 const express = require('express');
-const Joi = require('joi');
 
 const {
   listContacts,
   getContactById,
   addContact,
   updateContact,
+  removeContact,
+  updateContactField,
 } = require('../../models/contacts');
+const {
+  addContactValidation,
+  patchContactValidation,
+} = require('./middelwares/validationMiddelware');
 
 const router = express.Router();
 
@@ -26,44 +31,46 @@ router.get('/:contactId', async (req, res, next) => {
   res.status(200).json(contactById);
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', addContactValidation, async (req, res, next) => {
   const body = req.body;
-
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: ['com', 'net'] },
-      })
-      .required(),
-    phone: Joi.string()
-      .pattern(
-        /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/
-      )
-      .required(),
-  });
-
-  const validationResult = schema.validate(body);
-
-  if (validationResult.error) {
-    return res.status(400).json({
-      message: 'missing required name field',
-    });
-  }
   const newContact = await addContact(body);
   res.status(201).json(newContact);
 });
 
-router.put('/:contactId', async (req, res, next) => {
+router.put('/:contactId', addContactValidation, async (req, res, next) => {
   const body = req.body;
   const id = req.params.contactId;
   const changedContact = await updateContact(id, body);
-  res.json(changedContact);
+  if (!changedContact) {
+    return res.status(404).json({
+      message: `Contact with id=${id} not found`,
+    });
+  }
+  res.status(200).json(changedContact);
+});
+
+router.patch('/:contactId', patchContactValidation, async (req, res, next) => {
+  const body = req.body;
+  const id = req.params.contactId;
+  const changedContactField = await updateContactField(id, body);
+  console.log(changedContactField);
+  if (!changedContactField) {
+    return res.status(404).json({
+      message: `Contact with id=${id} not found`,
+    });
+  }
+  res.status(200).json(changedContactField);
 });
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' });
+  const id = req.params.contactId;
+  const deletedContact = await removeContact(id);
+  if (!deletedContact) {
+    res.status(404).json({
+      message: `Contact with id=${id} not found`,
+    });
+  }
+  res.status(200).json(deletedContact);
 });
 
 module.exports = router;
