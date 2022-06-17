@@ -5,7 +5,12 @@ const listContacts = async () => {
 };
 
 const getContactById = async (id) => {
-  return Contact.findById(id);
+  const contact = Contact.findById(id);
+  if (contact === "undefind") {
+    return null;
+  }
+
+  return contact;
 };
 
 const addContact = async (body) => {
@@ -13,14 +18,7 @@ const addContact = async (body) => {
 };
 
 const updateContact = async (id, body) => {
-  const contacts = await listContacts();
-  const idx = contacts.findIndex((item) => item.id === id);
-  if (idx === -1) {
-    return null;
-  }
-  contacts[idx] = { id, ...body };
-
-  return contacts[idx];
+  return await Contact.findByIdAndUpdate(id, body, { new: true });
 };
 
 const updateContactField = async (id, body) => {
@@ -50,7 +48,7 @@ const removeContact = async (id) => {
   if (idx === -1) {
     return null;
   }
-  const newContact = contacts.filter((_, index) => index !== idx);
+  contacts.filter((_, index) => index !== idx);
 
   return contacts[idx];
 };

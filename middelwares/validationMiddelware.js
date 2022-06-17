@@ -23,8 +23,7 @@ module.exports = {
 
     if (validationResult.error) {
       return res.status(400).json({
-        message: validationResult.error,
-        // message: 'missing required name field',
+        message: "missing required name field",
       });
     }
     next();

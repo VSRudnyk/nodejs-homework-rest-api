@@ -20,19 +20,13 @@ const getContacts = async (req, res, next) => {
 
 const getContact = async (req, res, next) => {
   const id = req.params.contactId;
-  const result = await getContactById(id);
-  if (!result) {
+  const contactById = await getContactById(id);
+  if (!contactById) {
     res.status(404).json({
       message: `Contact with id=${id} not found`,
     });
   }
-  res.status(200).json({
-    status: "success",
-    code: 200,
-    data: {
-      result,
-    },
-  });
+  res.status(200).json(contactById);
 };
 
 const addNewContact = async (req, res, next) => {
@@ -73,11 +67,11 @@ const patchContact = async (req, res, next) => {
 };
 
 const deleteContact = async (req, res, next) => {
-  const id = req.params.contactId;
-  const deletedContact = await removeContact(id);
+  const { _id } = req.params;
+  const deletedContact = await removeContact(_id);
   if (!deletedContact) {
     res.status(404).json({
-      message: `Contact with id=${id} not found`,
+      message: `Contact with id=${_id} not found`,
     });
   }
   res.status(200).json(deletedContact);
