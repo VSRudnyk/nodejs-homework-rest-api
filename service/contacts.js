@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const { Contact } = require("../models");
 
 const listContacts = async () => {
@@ -6,10 +7,9 @@ const listContacts = async () => {
 
 const getContactById = async (id) => {
   const contact = Contact.findById(id);
-  if (contact === "undefind") {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return null;
   }
-
   return contact;
 };
 
