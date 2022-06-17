@@ -1,17 +1,7 @@
-const fs = require('fs/promises');
-const { v4 } = require('uuid');
-const path = require('path');
-
-const contactsPath = path.join(__dirname, './contacts.json');
-
-const updateContacts = async (contacts) => {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-};
+const { Contact } = require("../models");
 
 const listContacts = async () => {
-  const data = await fs.readFile(contactsPath);
-  const contacts = JSON.parse(data);
-  return contacts;
+  return await Contact.find({});
 };
 
 const getContactById = async (id) => {
@@ -21,18 +11,19 @@ const getContactById = async (id) => {
 };
 
 const addContact = async (body) => {
-  const contacts = await listContacts();
-  const { name, email, phone } = body;
+  return await Contact.create(body);
+  // const contacts = await listContacts();
+  // const { name, email, phone } = body;
 
-  const newContact = {
-    id: v4(),
-    name,
-    email,
-    phone,
-  };
-  contacts.push(newContact);
-  await updateContacts(contacts);
-  return newContact;
+  // const newContact = {
+  //   id: v4(),
+  //   name,
+  //   email,
+  //   phone,
+  // };
+  // contacts.push(newContact);
+  // await updateContacts(contacts);
+  // return newContact;
 };
 
 const updateContact = async (id, body) => {
@@ -42,7 +33,7 @@ const updateContact = async (id, body) => {
     return null;
   }
   contacts[idx] = { id, ...body };
-  await updateContacts(contacts);
+
   return contacts[idx];
 };
 
@@ -63,7 +54,7 @@ const updateContactField = async (id, body) => {
   if (phone) {
     contacts[idx].phone = phone;
   }
-  await updateContacts(contacts);
+
   return contacts[idx];
 };
 
@@ -74,7 +65,7 @@ const removeContact = async (id) => {
     return null;
   }
   const newContact = contacts.filter((_, index) => index !== idx);
-  await updateContacts(newContact);
+
   return contacts[idx];
 };
 

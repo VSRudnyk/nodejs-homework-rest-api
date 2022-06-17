@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 module.exports = {
   addContactValidation: (req, res, next) => {
@@ -8,7 +8,7 @@ module.exports = {
       email: Joi.string()
         .email({
           minDomainSegments: 2,
-          tlds: { allow: ['com', 'net'] },
+          tlds: { allow: ["com", "net"] },
         })
         .required(),
       phone: Joi.string()
@@ -16,13 +16,15 @@ module.exports = {
           /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/
         )
         .required(),
+      favorite: Joi.bool(),
     });
 
     const validationResult = schema.validate(body);
 
     if (validationResult.error) {
       return res.status(400).json({
-        message: 'missing required name field',
+        message: validationResult.error,
+        // message: 'missing required name field',
       });
     }
     next();
@@ -34,7 +36,7 @@ module.exports = {
       email: Joi.string()
         .email({
           minDomainSegments: 2,
-          tlds: { allow: ['com', 'net'] },
+          tlds: { allow: ["com", "net"] },
         })
         .optional(),
       phone: Joi.string()
@@ -48,7 +50,7 @@ module.exports = {
 
     if (validationResult.error) {
       return res.status(400).json({
-        message: 'missing required name field',
+        message: "missing required name field",
       });
     }
     next();
