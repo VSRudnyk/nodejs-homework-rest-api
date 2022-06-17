@@ -5,25 +5,11 @@ const listContacts = async () => {
 };
 
 const getContactById = async (id) => {
-  const contacts = await listContacts();
-  const contact = contacts.find((item) => item.id === id);
-  return contact;
+  return Contact.findById(id);
 };
 
 const addContact = async (body) => {
   return await Contact.create(body);
-  // const contacts = await listContacts();
-  // const { name, email, phone } = body;
-
-  // const newContact = {
-  //   id: v4(),
-  //   name,
-  //   email,
-  //   phone,
-  // };
-  // contacts.push(newContact);
-  // await updateContacts(contacts);
-  // return newContact;
 };
 
 const updateContact = async (id, body) => {

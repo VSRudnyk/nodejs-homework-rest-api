@@ -20,19 +20,31 @@ const getContacts = async (req, res, next) => {
 
 const getContact = async (req, res, next) => {
   const id = req.params.contactId;
-  const contactById = await getContactById(id);
-  if (!contactById) {
+  const result = await getContactById(id);
+  if (!result) {
     res.status(404).json({
       message: `Contact with id=${id} not found`,
     });
   }
-  res.status(200).json(contactById);
+  res.status(200).json({
+    status: "success",
+    code: 200,
+    data: {
+      result,
+    },
+  });
 };
 
 const addNewContact = async (req, res, next) => {
   const body = req.body;
-  const newContact = await addContact(body);
-  res.status(201).json(newContact);
+  const result = await addContact(body);
+  res.status(201).json({
+    status: "success",
+    code: 201,
+    data: {
+      result,
+    },
+  });
 };
 
 const changeContact = async (req, res, next) => {
