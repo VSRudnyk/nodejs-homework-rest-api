@@ -5,12 +5,12 @@ const {
   updateContact,
   removeContact,
   updateContactField,
-} = require("../service/contacts");
+} = require('../service/contacts');
 
 const getContacts = async (req, res, next) => {
   const result = await listContacts();
   res.status(200).json({
-    status: "success",
+    status: 'success',
     code: 200,
     data: {
       result,
@@ -22,7 +22,7 @@ const getContact = async (req, res, next) => {
   const id = req.params.contactId;
   const contactById = await getContactById(id);
   if (!contactById) {
-    res.status(404).json({
+    return res.status(404).json({
       message: `Contact with id=${id} not found`,
     });
   }
@@ -33,7 +33,7 @@ const addNewContact = async (req, res, next) => {
   const body = req.body;
   const result = await addContact(body);
   res.status(201).json({
-    status: "success",
+    status: 'success',
     code: 201,
     data: {
       result,
@@ -57,7 +57,6 @@ const patchContact = async (req, res, next) => {
   const body = req.body;
   const id = req.params.contactId;
   const changedContactField = await updateContactField(id, body);
-  console.log(changedContactField);
   if (!changedContactField) {
     return res.status(404).json({
       message: `Contact with id=${id} not found`,
@@ -67,11 +66,11 @@ const patchContact = async (req, res, next) => {
 };
 
 const deleteContact = async (req, res, next) => {
-  const { _id } = req.params;
-  const deletedContact = await removeContact(_id);
+  const id = req.params.contactId;
+  const deletedContact = await removeContact(id);
   if (!deletedContact) {
     res.status(404).json({
-      message: `Contact with id=${_id} not found`,
+      message: `Contact with id=${id} not found`,
     });
   }
   res.status(200).json(deletedContact);

@@ -1,16 +1,15 @@
-const { default: mongoose } = require("mongoose");
-const { Contact } = require("../models");
+const { default: mongoose } = require('mongoose');
+const { Contact } = require('../models');
 
 const listContacts = async () => {
   return await Contact.find({});
 };
 
 const getContactById = async (id) => {
-  const contact = Contact.findById(id);
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return null;
   }
-  return contact;
+  return Contact.findById(id);
 };
 
 const addContact = async (body) => {
@@ -18,39 +17,24 @@ const addContact = async (body) => {
 };
 
 const updateContact = async (id, body) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null;
+  }
   return await Contact.findByIdAndUpdate(id, body, { new: true });
 };
 
 const updateContactField = async (id, body) => {
-  const { name, email, phone } = body;
-  const contacts = await listContacts();
-
-  const idx = contacts.findIndex((item) => item.id === id);
-  if (idx === -1) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return null;
   }
-  if (name) {
-    contacts[idx].name = name;
-  }
-  if (email) {
-    contacts[idx].email = email;
-  }
-  if (phone) {
-    contacts[idx].phone = phone;
-  }
-
-  return contacts[idx];
+  return await Contact.findByIdAndUpdate(id, body, { new: true });
 };
 
 const removeContact = async (id) => {
-  const contacts = await listContacts();
-  const idx = contacts.findIndex((item) => item.id === id);
-  if (idx === -1) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return null;
   }
-  contacts.filter((_, index) => index !== idx);
-
-  return contacts[idx];
+  return Contact.findByIdAndDelete(id);
 };
 
 module.exports = {
