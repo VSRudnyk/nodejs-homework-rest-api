@@ -11,6 +11,7 @@ const {
 const {
   addContactValidation,
   patchContactValidation,
+  favoriteValidation,
 } = require('../../middelwares/validationMiddelware');
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.get('/:contactId', getContact);
 router.post('/', addContactValidation, addNewContact);
 router.put('/:contactId', addContactValidation, changeContact);
 router.patch('/:contactId', patchContactValidation, patchContact);
+router.patch('/:contactId/favorite', favoriteValidation, patchContact);
 router.delete('/:contactId', deleteContact);
 
 module.exports = router;

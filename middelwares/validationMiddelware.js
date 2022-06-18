@@ -56,4 +56,21 @@ module.exports = {
     }
     next();
   },
+
+  favoriteValidation: (req, res, next) => {
+    const body = req.body;
+    const schema = Joi.object({
+      favorite: Joi.bool().required(),
+    });
+
+    const validationResult = schema.validate(body);
+
+    if (validationResult.error) {
+      return res.status(400).json({
+        // message: validationResult.error,
+        message: 'missing field favorite',
+      });
+    }
+    next();
+  },
 };
