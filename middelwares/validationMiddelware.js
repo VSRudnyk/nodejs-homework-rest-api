@@ -4,7 +4,7 @@ module.exports = {
   addContactValidation: (req, res, next) => {
     const body = req.body;
     const schema = Joi.object({
-      name: Joi.string().alphanum().min(3).max(30).required(),
+      name: Joi.string().required(),
       email: Joi.string()
         .email({
           minDomainSegments: 2,
@@ -30,7 +30,7 @@ module.exports = {
   patchContactValidation: (req, res, next) => {
     const body = req.body;
     const schema = Joi.object({
-      name: Joi.string().alphanum().min(3).max(30).optional(),
+      name: Joi.string().optional(),
       email: Joi.string()
         .email({
           minDomainSegments: 2,
@@ -49,6 +49,22 @@ module.exports = {
     if (validationResult.error) {
       return res.status(400).json({
         message: 'missing required name field',
+      });
+    }
+    next();
+  },
+
+  favoriteValidation: (req, res, next) => {
+    const body = req.body;
+    const schema = Joi.object({
+      favorite: Joi.bool().required(),
+    });
+
+    const validationResult = schema.validate(body);
+
+    if (validationResult.error) {
+      return res.status(400).json({
+        message: 'missing field favorite',
       });
     }
     next();

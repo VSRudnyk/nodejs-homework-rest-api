@@ -5,18 +5,24 @@ const {
   updateContact,
   removeContact,
   updateContactField,
-} = require('../models/contacts');
+} = require('../service/contacts');
 
 const getContacts = async (req, res, next) => {
-  const contacts = await listContacts();
-  res.status(200).json(contacts);
+  const result = await listContacts();
+  res.status(200).json({
+    status: 'success',
+    code: 200,
+    data: {
+      result,
+    },
+  });
 };
 
 const getContact = async (req, res, next) => {
   const id = req.params.contactId;
   const contactById = await getContactById(id);
   if (!contactById) {
-    res.status(404).json({
+    return res.status(404).json({
       message: `Contact with id=${id} not found`,
     });
   }
@@ -25,8 +31,14 @@ const getContact = async (req, res, next) => {
 
 const addNewContact = async (req, res, next) => {
   const body = req.body;
-  const newContact = await addContact(body);
-  res.status(201).json(newContact);
+  const result = await addContact(body);
+  res.status(201).json({
+    status: 'success',
+    code: 201,
+    data: {
+      result,
+    },
+  });
 };
 
 const changeContact = async (req, res, next) => {
@@ -45,7 +57,6 @@ const patchContact = async (req, res, next) => {
   const body = req.body;
   const id = req.params.contactId;
   const changedContactField = await updateContactField(id, body);
-  console.log(changedContactField);
   if (!changedContactField) {
     return res.status(404).json({
       message: `Contact with id=${id} not found`,
