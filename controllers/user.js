@@ -33,7 +33,7 @@ const login = async (req, res) => {
   const payload = {
     id: user._id,
   };
-  const token = jwt.sign(payload, SECRET_KEY);
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
   res.json({
     status: 'success',
     code: 200,
@@ -43,7 +43,22 @@ const login = async (req, res) => {
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+  res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      user: {
+        email,
+        subscription,
+      },
+    },
+  });
+};
+
 module.exports = {
   register,
   login,
+  getCurrent,
 };
