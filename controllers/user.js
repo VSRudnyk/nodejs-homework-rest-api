@@ -1,6 +1,8 @@
-const { Conflict } = require('http-errors');
+const { Conflict, Unauthorized } = require('http-errors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { User } = require('../models');
+const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -24,6 +26,27 @@ const register = async (req, res) => {
   });
 };
 
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  const passCompaire = await bcrypt.compare(password, user.password);
+  if (!user || !passCompaire) {
+    throw new Unauthorized('Email or password is wrong');
+  }
+  const payload = {
+    id: user._id,
+  };
+  const token = jwt.sign(payload, SECRET_KEY);
+  res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      token,
+    },
+  });
+};
+
 module.exports = {
   register,
+  login,
 };
