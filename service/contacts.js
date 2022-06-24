@@ -1,8 +1,12 @@
 const { default: mongoose } = require('mongoose');
 const { Contact } = require('../models');
 
-const listContacts = async (id) => {
-  return await Contact.find({ owner: id });
+const listContacts = async (id, page, limit) => {
+  const skip = (page - 1) * limit;
+  return await Contact.find({ owner: id }, '', {
+    skip,
+    limit: Number(limit),
+  }).populate('owner', '_id email');
 };
 
 const getContactById = async (id) => {
