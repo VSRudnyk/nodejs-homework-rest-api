@@ -10,7 +10,7 @@ const {
 const getContacts = async (req, res, next) => {
   const { page = 1, limit = 10 } = req.query;
   const { _id } = req.user;
-  const result = await listContacts(_id, page, limit);
+  const result = await listContacts(_id, { page, limit });
   res.status(200).json({
     status: 'success',
     code: 200,
