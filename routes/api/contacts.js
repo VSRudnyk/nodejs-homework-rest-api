@@ -6,7 +6,6 @@ const {
   getContact,
   addNewContact,
   changeContact,
-  patchContact,
   deleteContact,
 } = require('../../controllers/contactsController');
 
@@ -22,11 +21,11 @@ router.get('/', auth, ctrlWrapper(getContacts));
 router.get('/:contactId', ctrlWrapper(getContact));
 router.post('/', auth, addContactValidation, ctrlWrapper(addNewContact));
 router.put('/:contactId', addContactValidation, ctrlWrapper(changeContact));
-router.patch('/:contactId', patchContactValidation, ctrlWrapper(patchContact));
+router.patch('/:contactId', patchContactValidation, ctrlWrapper(changeContact));
 router.patch(
   '/:contactId/favorite',
   favoriteValidation,
-  ctrlWrapper(patchContact)
+  ctrlWrapper(changeContact)
 );
 router.delete('/:contactId', deleteContact);
 
