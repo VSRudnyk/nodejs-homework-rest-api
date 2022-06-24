@@ -1,4 +1,5 @@
 const express = require('express');
+const ctrlWrapper = require('../../middelwares/ctrlWrapper');
 const auth = require('../../middelwares/auth');
 const {
   getContacts,
@@ -17,12 +18,16 @@ const {
 
 const router = express.Router();
 
-router.get('/', auth, getContacts);
-router.get('/:contactId', getContact);
-router.post('/', auth, addContactValidation, addNewContact);
-router.put('/:contactId', addContactValidation, changeContact);
-router.patch('/:contactId', patchContactValidation, patchContact);
-router.patch('/:contactId/favorite', favoriteValidation, patchContact);
+router.get('/', auth, ctrlWrapper(getContacts));
+router.get('/:contactId', ctrlWrapper(getContact));
+router.post('/', auth, addContactValidation, ctrlWrapper(addNewContact));
+router.put('/:contactId', addContactValidation, ctrlWrapper(changeContact));
+router.patch('/:contactId', patchContactValidation, ctrlWrapper(patchContact));
+router.patch(
+  '/:contactId/favorite',
+  favoriteValidation,
+  ctrlWrapper(patchContact)
+);
 router.delete('/:contactId', deleteContact);
 
 module.exports = router;
