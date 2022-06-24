@@ -1,8 +1,8 @@
 const { default: mongoose } = require('mongoose');
 const { Contact } = require('../models');
 
-const listContacts = async () => {
-  return await Contact.find({});
+const listContacts = async (id) => {
+  return await Contact.find({ owner: id });
 };
 
 const getContactById = async (id) => {

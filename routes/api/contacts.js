@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require('../../middelwares/auth');
 const {
   getContacts,
   getContact,
@@ -16,9 +17,9 @@ const {
 
 const router = express.Router();
 
-router.get('/', getContacts);
+router.get('/', auth, getContacts);
 router.get('/:contactId', getContact);
-router.post('/', addContactValidation, addNewContact);
+router.post('/', auth, addContactValidation, addNewContact);
 router.put('/:contactId', addContactValidation, changeContact);
 router.patch('/:contactId', patchContactValidation, patchContact);
 router.patch('/:contactId/favorite', favoriteValidation, patchContact);
