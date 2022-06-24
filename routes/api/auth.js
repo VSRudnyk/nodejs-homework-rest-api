@@ -2,6 +2,7 @@ const express = require('express');
 
 const { register, login, getCurrent } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
+const ctrlWrapper = require('../../middelwares/ctrlWrapper');
 const {
   registerValidation,
   loginValidation,
@@ -9,8 +10,8 @@ const {
 
 const router = express.Router();
 
-router.post('/signup', registerValidation, register);
-router.post('/signin', loginValidation, login);
-router.get('/current', auth, getCurrent);
+router.post('/signup', registerValidation, ctrlWrapper(register));
+router.post('/signin', loginValidation, ctrlWrapper(login));
+router.get('/current', auth, ctrlWrapper(getCurrent));
 
 module.exports = router;
