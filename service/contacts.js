@@ -1,8 +1,11 @@
 const { default: mongoose } = require('mongoose');
 const { Contact } = require('../models');
 
-const listContacts = async (id, page, limit) => {
+const listContacts = async (id, page, limit, favorite) => {
   const skip = (page - 1) * limit;
+  if (favorite) {
+    console.log(favorite);
+  }
   return await Contact.find({ owner: id })
     .skip(skip)
     .limit(limit)

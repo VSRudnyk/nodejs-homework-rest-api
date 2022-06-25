@@ -1,4 +1,4 @@
-const { Conflict, Unauthorized } = require('http-errors');
+const { Conflict, Unauthorized, NotFound } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { SECRET_KEY } = process.env;
@@ -64,9 +64,23 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
+const subscriptionChange = async (req, res) => {
+  const { _id } = req.user;
+  const body = req.body;
+  const result = await User.findByIdAndUpdate(_id, body, { new: true });
+  res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      result,
+    },
+  });
+};
+
 module.exports = {
   register,
   login,
   getCurrent,
   logout,
+  subscriptionChange,
 };

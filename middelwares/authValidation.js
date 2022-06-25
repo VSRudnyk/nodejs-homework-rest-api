@@ -44,4 +44,19 @@ module.exports = {
     }
     next();
   },
+  subscriptionValidation: (req, res, next) => {
+    const body = req.body;
+    const schema = Joi.object({
+      subscription: Joi.string().valid('starter', 'pro', 'business').required(),
+    });
+
+    const validationResult = schema.validate(body);
+
+    if (validationResult.error) {
+      return res.status(400).json({
+        message: 'missing required field',
+      });
+    }
+    next();
+  },
 };
