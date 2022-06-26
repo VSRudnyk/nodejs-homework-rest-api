@@ -54,7 +54,7 @@ module.exports = {
 
     if (validationResult.error) {
       return res.status(400).json({
-        message: 'missing required field',
+        message: 'invalid subscription',
       });
     }
     next();

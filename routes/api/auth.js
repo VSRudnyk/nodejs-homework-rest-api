@@ -20,7 +20,7 @@ const router = express.Router();
 router.post('/signup', registerValidation, ctrlWrapper(register));
 router.post('/signin', loginValidation, ctrlWrapper(login));
 router.get('/current', auth, ctrlWrapper(getCurrent));
-router.post('/logout', auth, ctrlWrapper(logout));
+router.get('/logout', auth, ctrlWrapper(logout));
 router.patch(
   '/',
   auth,

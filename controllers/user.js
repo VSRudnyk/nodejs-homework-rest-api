@@ -1,4 +1,4 @@
-const { Conflict, Unauthorized, NotFound } = require('http-errors');
+const { Conflict, Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { SECRET_KEY } = process.env;
@@ -6,6 +6,7 @@ const { SECRET_KEY } = process.env;
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (user) {
     throw new Conflict(`${email} in use`);
   }
@@ -19,6 +20,7 @@ const register = async (req, res) => {
     code: 201,
     data: {
       email,
+      subscription: 'starter',
     },
   });
 };
@@ -35,11 +37,16 @@ const login = async (req, res) => {
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
   await User.findByIdAndUpdate(user._id, { token });
+  const { subscription } = user;
   res.json({
     status: 'success',
     code: 200,
     data: {
       token,
+      user: {
+        email,
+        subscription,
+      },
     },
   });
 };

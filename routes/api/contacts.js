@@ -6,13 +6,13 @@ const {
   getContact,
   addNewContact,
   changeContact,
+  patchContact,
   deleteContact,
 } = require('../../controllers/contactsController');
 
 const {
   addContactValidation,
   patchContactValidation,
-  favoriteValidation,
 } = require('../../middelwares/validationMiddelware');
 
 const router = express.Router();
@@ -21,12 +21,7 @@ router.get('/', auth, ctrlWrapper(getContacts));
 router.get('/:contactId', ctrlWrapper(getContact));
 router.post('/', auth, addContactValidation, ctrlWrapper(addNewContact));
 router.put('/:contactId', addContactValidation, ctrlWrapper(changeContact));
-router.patch('/:contactId', patchContactValidation, ctrlWrapper(changeContact));
-router.patch(
-  '/:contactId/favorite',
-  favoriteValidation,
-  ctrlWrapper(changeContact)
-);
+router.patch('/:contactId', patchContactValidation, ctrlWrapper(patchContact));
 router.delete('/:contactId', deleteContact);
 
 module.exports = router;
