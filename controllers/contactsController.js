@@ -8,7 +8,11 @@ const {
 } = require('../service/contacts');
 
 const getContacts = async (req, res, next) => {
-  const result = await listContacts();
+  let { page = 1, limit = 10, favorite } = req.query;
+  limit = parseInt(limit) > 10 ? 10 : limit;
+  page = parseInt(page);
+  const { _id } = req.user;
+  const result = await listContacts(_id, page, limit, favorite);
   res.status(200).json({
     status: 'success',
     code: 200,
@@ -30,8 +34,9 @@ const getContact = async (req, res, next) => {
 };
 
 const addNewContact = async (req, res, next) => {
+  const { _id } = req.user;
   const body = req.body;
-  const result = await addContact(body);
+  const result = await addContact({ ...body, owner: _id });
   res.status(201).json({
     status: 'success',
     code: 201,
