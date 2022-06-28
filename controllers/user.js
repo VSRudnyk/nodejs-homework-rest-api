@@ -1,5 +1,6 @@
 const { Conflict, Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 const { User } = require('../models');
 const { SECRET_KEY } = process.env;
 
@@ -11,7 +12,8 @@ const register = async (req, res) => {
     throw new Conflict(`${email} in use`);
   }
 
-  const newUser = new User({ email });
+  const avatarURL = gravatar.url(email);
+  const newUser = new User({ email, avatarURL });
   newUser.setPassword(password);
   newUser.save();
 
@@ -21,6 +23,7 @@ const register = async (req, res) => {
     data: {
       email,
       subscription: 'starter',
+      avatarURL,
     },
   });
 };
