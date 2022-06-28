@@ -6,8 +6,10 @@ const {
   getCurrent,
   logout,
   subscriptionChange,
+  updateAvatar,
 } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
+const upload = require('../../middelwares/upload.js');
 const ctrlWrapper = require('../../middelwares/ctrlWrapper');
 const {
   registerValidation,
@@ -26,6 +28,12 @@ router.patch(
   auth,
   subscriptionValidation,
   ctrlWrapper(subscriptionChange)
+);
+router.patch(
+  '/avatars',
+  auth,
+  upload.single('avatar'),
+  ctrlWrapper(updateAvatar)
 );
 
 module.exports = router;

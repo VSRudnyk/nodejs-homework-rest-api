@@ -1,7 +1,10 @@
 const { Conflict, Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
+const path = require('path');
 const { User } = require('../models');
+const fs = require('fs/promises');
+
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
@@ -87,10 +90,29 @@ const subscriptionChange = async (req, res) => {
   });
 };
 
+const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
+
+const updateAvatar = async (req, res) => {
+  const { path: tempUpload, originalname } = req.file;
+  const { _id: id } = req.user;
+  const imageName = `${id}_${originalname}`;
+  try {
+    const resultUpload = path.join(avatarDir, imageName);
+    const avatarURL = path.join('public', 'avatars', imageName);
+    await fs.rename(tempUpload, resultUpload);
+    await User.findByIdAndUpdate(id, { avatarURL });
+    res.json({ avatarURL });
+  } catch (error) {
+    await fs.unlink(tempUpload);
+    throw error;
+  }
+};
+
 module.exports = {
   register,
   login,
   getCurrent,
   logout,
   subscriptionChange,
+  updateAvatar,
 };
