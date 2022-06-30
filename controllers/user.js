@@ -91,11 +91,10 @@ const subscriptionChange = async (req, res) => {
   });
 };
 
-const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
-
 const updateAvatar = async (req, res) => {
   const { path: tempUpload, originalname } = req.file;
   const { _id: id } = req.user;
+  const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
   const imageName = `${id}_${originalname}`;
   const resizeImage = `resize_${imageName}`;
 
