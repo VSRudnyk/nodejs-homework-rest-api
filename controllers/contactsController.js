@@ -5,7 +5,7 @@ const {
   updateContact,
   removeContact,
   updateContactField,
-} = require('../service/contacts');
+} = require('../service/contactsService');
 
 const getContacts = async (req, res, next) => {
   let { page = 1, limit = 10, favorite } = req.query;

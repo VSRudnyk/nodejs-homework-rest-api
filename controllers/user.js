@@ -1,50 +1,31 @@
-const { Conflict, Unauthorized } = require('http-errors');
-const jwt = require('jsonwebtoken');
-const gravatar = require('gravatar');
 const path = require('path');
 const Jimp = require('jimp');
 const { User } = require('../models');
 const fs = require('fs/promises');
-
-const { SECRET_KEY } = process.env;
+const authService = require('../service/authService');
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const result = await authService.registerUser(req.body);
+  const { email, subscription, avatarURL } = result;
 
-  if (user) {
-    throw new Conflict(`${email} in use`);
-  }
-
-  const avatarURL = gravatar.url(email);
-  const newUser = new User({ email, avatarURL });
-  newUser.setPassword(password);
-  newUser.save();
-
-  res.status(201).json({
+  return res.status(201).json({
     status: 'success',
     code: 201,
     data: {
       email,
-      subscription: 'starter',
+      subscription,
       avatarURL,
     },
   });
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const result = await authService.loginUser(req.body);
+  const {
+    token,
+    user: { email, subscription },
+  } = result;
 
-  if (!user || !user.comparePassword(password)) {
-    throw new Unauthorized('Email or password is wrong');
-  }
-  const payload = {
-    id: user._id,
-  };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-  await User.findByIdAndUpdate(user._id, { token });
-  const { subscription } = user;
   res.json({
     status: 'success',
     code: 200,
@@ -73,8 +54,7 @@ const getCurrent = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: null });
+  await authService.logoutUser(req.user);
   res.status(204).json();
 };
 
