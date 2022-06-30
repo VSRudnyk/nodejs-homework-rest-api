@@ -26,7 +26,7 @@ const login = async (req, res) => {
     user: { email, subscription },
   } = result;
 
-  res.json({
+  return res.json({
     status: 'success',
     code: 200,
     data: {
