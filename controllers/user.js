@@ -2,6 +2,7 @@ const { Conflict, Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
 const path = require('path');
+const Jimp = require('jimp');
 const { User } = require('../models');
 const fs = require('fs/promises');
 
@@ -96,9 +97,16 @@ const updateAvatar = async (req, res) => {
   const { path: tempUpload, originalname } = req.file;
   const { _id: id } = req.user;
   const imageName = `${id}_${originalname}`;
+  const resizeImage = `resize_${imageName}`;
+
   try {
-    const resultUpload = path.join(avatarDir, imageName);
-    const avatarURL = path.join('public', 'avatars', imageName);
+    const avatarURL = path.join('public', 'avatars', resizeImage);
+    Jimp.read(tempUpload, (err, image) => {
+      if (err) throw err;
+      image.resize(250, 250).write(avatarURL);
+    });
+    const resultUpload = path.join(avatarDir, resizeImage);
+
     await fs.rename(tempUpload, resultUpload);
     await User.findByIdAndUpdate(id, { avatarURL });
     res.json({ avatarURL });
