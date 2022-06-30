@@ -9,7 +9,7 @@ const {
   updateAvatar,
 } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
-const upload = require('../../middelwares/upload.js');
+const upload = require('../../middelwares/upload');
 const ctrlWrapper = require('../../middelwares/ctrlWrapper');
 const {
   registerValidation,
