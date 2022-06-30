@@ -1,10 +1,7 @@
 const express = require('express');
-
+const { register, login, logout } = require('../../controllers/auth');
 const {
-  register,
-  login,
   getCurrent,
-  logout,
   subscriptionChange,
   updateAvatar,
 } = require('../../controllers/user');

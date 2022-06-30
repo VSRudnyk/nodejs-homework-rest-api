@@ -1,4 +1,4 @@
-const authController = require('./user');
+const authController = require('./auth');
 const authService = require('../service/authService');
 
 describe('Auth Controller', () => {
@@ -53,9 +53,8 @@ describe('Auth Controller', () => {
 
       expect(result.code).toBe(200);
       expect(result.data.token).toBe('test JWT-token');
+      expect(result.data.user.email).toBe('email@gmail.com');
+      expect(result.data.user.subscription).toBe('starter');
     });
   });
 });
-
-// https://www.youtube.com/watch?v=oGCBpSOIzG8
-// 1:58
