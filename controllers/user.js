@@ -1,55 +1,4 @@
-const { Conflict, Unauthorized } = require('http-errors');
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const { SECRET_KEY } = process.env;
-
-const register = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (user) {
-    throw new Conflict(`${email} in use`);
-  }
-
-  const newUser = new User({ email });
-  newUser.setPassword(password);
-  newUser.save();
-
-  res.status(201).json({
-    status: 'success',
-    code: 201,
-    data: {
-      email,
-      subscription: 'starter',
-    },
-  });
-};
-
-const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user || !user.comparePassword(password)) {
-    throw new Unauthorized('Email or password is wrong');
-  }
-  const payload = {
-    id: user._id,
-  };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-  await User.findByIdAndUpdate(user._id, { token });
-  const { subscription } = user;
-  res.json({
-    status: 'success',
-    code: 200,
-    data: {
-      token,
-      user: {
-        email,
-        subscription,
-      },
-    },
-  });
-};
+const userService = require('../service/userService');
 
 const getCurrent = async (req, res) => {
   const { email, subscription } = req.user;
@@ -65,16 +14,8 @@ const getCurrent = async (req, res) => {
   });
 };
 
-const logout = async (req, res) => {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: null });
-  res.status(204).json();
-};
-
 const subscriptionChange = async (req, res) => {
-  const { _id } = req.user;
-  const body = req.body;
-  const result = await User.findByIdAndUpdate(_id, body, { new: true });
+  const result = await userService.subscription(req.user, req.body);
   res.json({
     status: 'success',
     code: 200,
@@ -84,10 +25,14 @@ const subscriptionChange = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const result = await userService.avatar(req.file, req.user);
+  const { avatarURL } = result;
+  res.json({ avatarURL });
+};
+
 module.exports = {
-  register,
-  login,
   getCurrent,
-  logout,
   subscriptionChange,
+  updateAvatar,
 };

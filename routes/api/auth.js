@@ -1,13 +1,12 @@
 const express = require('express');
-
+const { register, login, logout } = require('../../controllers/auth');
 const {
-  register,
-  login,
   getCurrent,
-  logout,
   subscriptionChange,
+  updateAvatar,
 } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
+const upload = require('../../middelwares/upload');
 const ctrlWrapper = require('../../middelwares/ctrlWrapper');
 const {
   registerValidation,
@@ -26,6 +25,12 @@ router.patch(
   auth,
   subscriptionValidation,
   ctrlWrapper(subscriptionChange)
+);
+router.patch(
+  '/avatars',
+  auth,
+  upload.single('avatar'),
+  ctrlWrapper(updateAvatar)
 );
 
 module.exports = router;
