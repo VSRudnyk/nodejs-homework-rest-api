@@ -31,8 +31,17 @@ const updateAvatar = async (req, res) => {
   res.json({ avatarURL });
 };
 
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params;
+  await userService.verify(verificationToken);
+  res.json({
+    message: 'Verification successful',
+  });
+};
+
 module.exports = {
   getCurrent,
   subscriptionChange,
   updateAvatar,
+  verifyEmail,
 };

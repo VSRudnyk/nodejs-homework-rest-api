@@ -1,5 +1,6 @@
 const path = require('path');
 const Jimp = require('jimp');
+const { NotFound } = require('http-errors');
 const { User } = require('../models');
 const fs = require('fs/promises');
 
@@ -32,7 +33,19 @@ const avatar = async (reqFile, reqUser) => {
   }
 };
 
+const verify = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    throw NotFound();
+  }
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
+};
+
 module.exports = {
   subscription,
   avatar,
+  verify,
 };

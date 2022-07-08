@@ -4,6 +4,7 @@ const {
   getCurrent,
   subscriptionChange,
   updateAvatar,
+  verifyEmail,
 } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
 const upload = require('../../middelwares/upload');
@@ -32,5 +33,6 @@ router.patch(
   upload.single('avatar'),
   ctrlWrapper(updateAvatar)
 );
+router.get('/verify/:verificationToken', ctrlWrapper(verifyEmail));
 
 module.exports = router;
