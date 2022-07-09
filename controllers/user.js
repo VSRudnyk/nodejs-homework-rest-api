@@ -39,9 +39,17 @@ const verifyEmail = async (req, res) => {
   });
 };
 
+const reVerification = async (req, res) => {
+  await userService.reVerify(req.body);
+  res.json({
+    message: 'Verification successful',
+  });
+};
+
 module.exports = {
   getCurrent,
   subscriptionChange,
   updateAvatar,
   verifyEmail,
+  reVerification,
 };
