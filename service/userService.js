@@ -50,8 +50,7 @@ const reVerify = async (reqBody) => {
   const user = await User.findOne({ email });
   const { verify, verificationToken } = user;
   if (!verify) {
-    // throw BadRequest('Verification has already been passed');
-    console.log(verify);
+    throw BadRequest('Verification has already been passed');
   }
   const mail = {
     to: email,
