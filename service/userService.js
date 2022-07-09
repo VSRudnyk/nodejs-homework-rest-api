@@ -1,6 +1,6 @@
 const path = require('path');
 const Jimp = require('jimp');
-const { NotFound, createError } = require('http-errors');
+const { NotFound, BadRequest } = require('http-errors');
 const fs = require('fs/promises');
 const { User } = require('../models');
 const { sendEmail } = require('../helpers');
@@ -50,7 +50,8 @@ const reVerify = async (reqBody) => {
   const user = await User.findOne({ email });
   const { verify, verificationToken } = user;
   if (!verify) {
-    throw createError(400, 'Verification has already been passed');
+    // throw BadRequest('Verification has already been passed');
+    console.log(verify);
   }
   const mail = {
     to: email,
