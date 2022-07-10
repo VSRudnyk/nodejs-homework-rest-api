@@ -1,8 +1,9 @@
 const path = require('path');
 const Jimp = require('jimp');
-const { NotFound } = require('http-errors');
-const { User } = require('../models');
+const { NotFound, BadRequest } = require('http-errors');
 const fs = require('fs/promises');
+const { User } = require('../models');
+const { sendEmail } = require('../helpers');
 
 const subscription = async (user, reqBody) => {
   const { _id } = user;
@@ -44,8 +45,24 @@ const verify = async (verificationToken) => {
   });
 };
 
+const reVerify = async (reqBody) => {
+  const { email } = reqBody;
+  const user = await User.findOne({ email });
+  const { verify, verificationToken } = user;
+  if (!verify) {
+    throw BadRequest('Verification has already been passed');
+  }
+  const mail = {
+    to: email,
+    subject: 'Подтверждение email',
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Подтвердить email</a>`,
+  };
+  await sendEmail(mail);
+};
+
 module.exports = {
   subscription,
   avatar,
   verify,
+  reVerify,
 };

@@ -5,6 +5,7 @@ const {
   subscriptionChange,
   updateAvatar,
   verifyEmail,
+  reVerification,
 } = require('../../controllers/user');
 const auth = require('../../middelwares/auth');
 const upload = require('../../middelwares/upload');
@@ -13,6 +14,7 @@ const {
   registerValidation,
   loginValidation,
   subscriptionValidation,
+  varifyValidation,
 } = require('../../middelwares/authValidation');
 
 const router = express.Router();
@@ -34,5 +36,6 @@ router.patch(
   ctrlWrapper(updateAvatar)
 );
 router.get('/verify/:verificationToken', ctrlWrapper(verifyEmail));
+router.post('/verify', varifyValidation, ctrlWrapper(reVerification));
 
 module.exports = router;
