@@ -3,12 +3,12 @@ const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const { v4 } = require('uuid');
 const { User } = require('../models');
-const { sendEmail } = require('../helpers');
+// const { sendEmail } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
 
 const registerUser = async (body) => {
-  const { email, password } = body;
+  const { email, password, name } = body;
   const user = await User.findOne({ email });
 
   if (user) {
@@ -17,16 +17,9 @@ const registerUser = async (body) => {
 
   const avatarURL = gravatar.url(email);
   const verificationToken = v4();
-  const newUser = new User({ email, avatarURL, verificationToken });
+  const newUser = new User({ name, email, avatarURL, verificationToken });
   newUser.setPassword(password);
   newUser.save();
-
-  const mail = {
-    to: email,
-    subject: 'Подтверждение email',
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Подтвердить email</a>`,
-  };
-  await sendEmail(mail);
 
   return newUser;
 };
@@ -35,8 +28,8 @@ const loginUser = async (body) => {
   const { email, password } = body;
   const user = await User.findOne({ email });
 
-  if (!user || !user.verify || !user.comparePassword(password)) {
-    throw new Unauthorized('Email is wron or not verify, or password is wrong');
+  if (!user || !user.comparePassword(password)) {
+    throw new Unauthorized('Email is wron, or password is wrong');
   }
   const payload = {
     id: user._id,

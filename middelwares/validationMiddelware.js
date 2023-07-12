@@ -5,12 +5,7 @@ module.exports = {
     const body = req.body;
     const schema = Joi.object({
       name: Joi.string().required(),
-      email: Joi.string()
-        .email({
-          minDomainSegments: 2,
-        })
-        .required(),
-      phone: Joi.string()
+      number: Joi.string()
         .pattern(
           /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/
         )
@@ -30,12 +25,7 @@ module.exports = {
     const body = req.body;
     const schema = Joi.object({
       name: Joi.string().optional(),
-      email: Joi.string()
-        .email({
-          minDomainSegments: 2,
-        })
-        .optional(),
-      phone: Joi.string()
+      number: Joi.string()
         .pattern(
           /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/
         )

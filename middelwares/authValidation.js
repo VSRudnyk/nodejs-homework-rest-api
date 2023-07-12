@@ -4,6 +4,7 @@ module.exports = {
   registerValidation: (req, res, next) => {
     const body = req.body;
     const schema = Joi.object({
+      name: Joi.string().required(),
       password: Joi.string().required(),
       email: Joi.string()
         .email({
@@ -30,7 +31,7 @@ module.exports = {
       email: Joi.string()
         .email({
           minDomainSegments: 2,
-          tlds: { allow: ['com', 'net'] },
+          tlds: { allow: ['com', 'net', 'ua'] },
         })
         .required(),
     });

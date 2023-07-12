@@ -1,15 +1,13 @@
 const userService = require('../service/userService');
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { email, subscription, name, avatarURL } = req.user;
   res.json({
-    status: 'success',
-    code: 200,
-    data: {
-      user: {
-        email,
-        subscription,
-      },
+    user: {
+      name,
+      email,
+      subscription,
+      avatarURL,
     },
   });
 };

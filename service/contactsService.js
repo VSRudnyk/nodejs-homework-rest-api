@@ -31,6 +31,7 @@ const getContactById = async (id) => {
 };
 
 const addContact = async (body) => {
+  console.log(body);
   return await Contact.create(body);
 };
 

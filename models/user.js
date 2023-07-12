@@ -12,6 +12,10 @@ const userSchema = Schema(
       required: [true, 'Email is required'],
       unique: true,
     },
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
     subscription: {
       type: String,
       enum: ['starter', 'pro', 'business'],
@@ -24,10 +28,6 @@ const userSchema = Schema(
     token: {
       type: String,
       default: null,
-    },
-    verify: {
-      type: Boolean,
-      default: false,
     },
     verificationToken: {
       type: String,
