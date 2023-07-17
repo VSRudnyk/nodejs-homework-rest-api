@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get('/', auth, ctrlWrapper(ctrl.getContacts));
 router.get('/:contactId', ctrlWrapper(ctrl.getContact));
-router.post('/', addContactValidation, ctrlWrapper(ctrl.addNewContact));
+router.post('/', auth, addContactValidation, ctrlWrapper(ctrl.addNewContact));
 router.put(
   '/:contactId',
   addContactValidation,
